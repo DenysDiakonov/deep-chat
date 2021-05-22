@@ -1,0 +1,15 @@
+{
+  "name": "deep-chat",
+  "scripts": {
+    "start": "serverless offline",
+    "dev": "nodemon -e py -x yarn start",
+    "deploy": "serverless deploy",
+    "ping": "serverless invoke -f ping"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7",
+    "serverless-dotenv-plugin": "^3.9.0",
+    "serverless-offline": "^6.9.0",
+    "serverless-python-requirements": "^5.1.1"
+  }
+}

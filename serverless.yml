@@ -1,0 +1,69 @@
+service: deep-chat
+app: deep-chat
+org: denthegreat
+
+frameworkVersion: "2"
+
+provider:
+    name: aws
+    runtime: python3.8
+    lambdaHashingVersion: 20201221
+    stage: dev
+    region: eu-central-1
+    websocketApiName: deep-chat-api
+    websocketApiRouteSelectionExpression: $request.body.action
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - "execute-api:ManageConnections"
+          Resource:
+              - "arn:aws:execute-api:*:*:**/@connections/*"
+        - Effect: Allow
+          Action:
+              - "dynamodb:PutItem"
+              - "dynamodb:GetItem"
+              - "dynamodb:UpdateItem"
+              - "dynamodb:DeleteItem"
+              - "dynamodb:BatchGetItem"
+              - "dynamodb:BatchWriteItem"
+              - "dynamodb:Scan"
+              - "dynamodb:Query"
+          Resource:
+              - "arn:aws:dynamodb:eu-central-1:*:*"
+
+plugins:
+    - serverless-offline
+    - serverless-python-requirements
+    - serverless-dotenv-plugin
+
+custom:
+    pythonRequirements:
+        dockerizePip: true
+        noDeploy: []
+
+functions:
+    connectionManager:
+        handler: handler.connection_manager
+        events:
+            - websocket:
+                  route: $connect
+            - websocket:
+                  route: $disconnect
+    ping:
+        handler: handler.ping
+        events:
+            - http:
+                  path: ping
+                  method: get
+    register:
+        handler: auth.views.register
+        events:
+            - http:
+                  path: register
+                  method: post
+    login:
+        handler: auth.views.login
+        events:
+            - http:
+                  path: login
+                  method: post
