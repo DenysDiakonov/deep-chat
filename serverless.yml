@@ -56,13 +56,13 @@ functions:
                   path: ping
                   method: get
     register:
-        handler: auth.views.register
+        handler: handler.register
         events:
             - http:
                   path: register
                   method: post
     login:
-        handler: auth.views.login
+        handler: handler.login
         events:
             - http:
                   path: login
