@@ -49,6 +49,16 @@ functions:
                   route: $connect
             - websocket:
                   route: $disconnect
+    defaultMessage:
+        handler: handler.default_message
+        events:
+            - websocket:
+                route: $default
+    sendMessage:
+        handler: handler.send_message
+        events:
+            - websocket:
+                route: sendMessage
     ping:
         handler: handler.ping
         events:

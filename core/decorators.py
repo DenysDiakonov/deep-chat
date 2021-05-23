@@ -15,6 +15,7 @@ def with_response(func):
             code = e.code
         if isinstance(response, tuple):
             response, code = response
+        print(response)
         return get_response(code, response)
 
     return wrapper
