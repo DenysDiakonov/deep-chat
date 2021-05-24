@@ -73,7 +73,11 @@ def send_message(event, context):
     message = MessageManager().create(item)
     connections = conn_manager.get_connections_by_room(room)
 
-    message = {"username": message.username, "content": message.content}
+    message = {
+        "username": message.username,
+        "content": message.content,
+        "timestamp": message.timestamp,
+    }
     data = {"messages": [message]}
     for id in connections:
         try:
@@ -81,3 +85,18 @@ def send_message(event, context):
         except:
             conn_manager.delete(id)
     return f"Message sent to {len(connections)} connections."
+
+
+@with_response
+def get_recent_messages(event, context):
+    id = event["requestContext"].get("connectionId")
+    if not id:
+        raise APIException("connectionId value not set.")
+
+    room = ChatConnectionManager().get_room_by_connection(id)
+    msgs = MessageManager().get_history(room)
+
+    data = {"messages": msgs}
+    send_to_connection(id, data, event)
+
+    return f"Sent recent messages to '{id}'."

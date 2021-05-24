@@ -3,7 +3,7 @@ import time
 from pydantic import BaseModel
 
 from core.db import dynamodb
-from core.exceptions import APIException, ValidationError
+from core.exceptions import APIException
 
 
 class ChatConnectionDBModel(BaseModel):
@@ -81,3 +81,24 @@ class MessageManager:
         )
         self.table.put_item(Item=new_item.dict())
         return new_item
+
+    def get_history(self, room):
+        response = self.table.query(
+            KeyConditionExpression="room = :room",
+            ExpressionAttributeValues={":room": room},
+            Limit=100,
+            ScanIndexForward=False,
+        )
+        items = response.get("Items", [])
+
+        messages = [
+            {
+                "username": i["username"],
+                "content": i["content"],
+                "timestamp": int(i["timestamp"]),
+            }
+            for i in items
+        ]
+        messages.reverse()
+
+        return messages
