@@ -13,9 +13,6 @@ def connection_manager(event, context):
     token = event.get("queryStringParameters", {}).get("token")
     room = event.get("queryStringParameters", {}).get("room")
 
-    print("connection_id", connection_id)
-    print("token", token)
-
     if event["requestContext"]["eventType"] == "CONNECT":
         if not connection_id:
             raise APIException("connectionId value not set.")

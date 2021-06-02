@@ -8,10 +8,10 @@ def with_response(func):
         try:
             response = func(event, context)
         except ValidationError as e:
-            response = e.detail
+            response = {"detail": e.detail}
             code = e.code
         except APIException as e:
-            response = e.detail
+            response = {"detail": e.detail}
             code = e.code
         if isinstance(response, tuple):
             response, code = response

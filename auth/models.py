@@ -19,7 +19,7 @@ class UserManager:
 
     def get_token(self, user: UserDBModel) -> str:
         return jwt.encode(
-            {"username": "denthegreat"},
+            user.dict(),
             os.getenv("JWT_SECRET"),
             algorithm="HS256",
         )

@@ -87,7 +87,7 @@ class MessageManager:
             KeyConditionExpression="room = :room",
             ExpressionAttributeValues={":room": room},
             Limit=100,
-            ScanIndexForward=False,
+            ScanIndexForward=True,
         )
         items = response.get("Items", [])
 

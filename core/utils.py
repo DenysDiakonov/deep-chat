@@ -1,5 +1,7 @@
-from core.exceptions import APIException
+import os
 import json
+
+from core.exceptions import APIException
 
 
 def get_response(status_code, body):
@@ -8,7 +10,16 @@ def get_response(status_code, body):
             body = json.dumps(body)
         except:
             raise APIException("Given body is not JSON-serializible")
-    return {"statusCode": status_code, "body": body}
+    origin = os.getenv("CORS_ORIGIN", "*")
+
+    return {
+        "statusCode": status_code,
+        "body": body,
+        "headers": {
+            "Access-Control-Allow-Origin": origin,
+            "Access-Control-Allow-Credentials": True,
+        },
+    }
 
 
 def get_body(event):
